@@ -85,6 +85,7 @@ public class UsuarioController {
     @DeleteMapping("/{cpf}")
     public ResponseEntity<Map<String,String >> deletarUsuario(@PathVariable String cpf){
         try {
+            usuarioService.deletarUsuario(cpf);
             Map<String, String> response = new HashMap<>();
             response.put("message", "Usuário deletado com sucesso.");
 

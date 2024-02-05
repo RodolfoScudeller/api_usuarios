@@ -23,10 +23,9 @@ public class UsuarioDAO {
 
     public List<Map<String, Object>> listarTodosUsuarios(){
         try{
-            return jdbcTemplate.queryForList("SELECT * FROM usuarios WHERE active = true");
-        } catch (DataAccessException e) {
-            System.err.println("Erro ao executar a consulta SQL: " + e.getMessage());
-            e.printStackTrace();
+            return jdbcTemplate.queryForList("SELECT * FROM usuarios WHERE ativo = true");
+        }catch (EmptyResultDataAccessException e) {
+            System.out.println("Nenhum usuário encontrado");
             return Collections.emptyList();
         } catch (Exception e) {
             System.err.println("Ocorreu uma exceção: " + e.getMessage());
@@ -38,12 +37,11 @@ public class UsuarioDAO {
 
     public Map<String,Object> obterUsuarioPeloCpf(String cpf){
         try{
-            return jdbcTemplate.queryForMap("SELECT * FROM usuarios WHERE cpf = ? AND active = true", cpf);
-        } catch (DataAccessException e) {
-            System.err.println("Erro ao executar a consulta SQL: " + e.getMessage());
-            e.printStackTrace();
+            return jdbcTemplate.queryForMap("SELECT * FROM usuarios WHERE cpf = ? AND ativo = true", cpf);
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println("Nenhum usuário encontrado para o CPF: " + cpf);
             return Collections.emptyMap();
-        } catch (Exception e) {
+        }catch (Exception e) {
             System.err.println("Ocorreu uma exceção: " + e.getMessage());
             e.printStackTrace();
             return Collections.emptyMap();
@@ -76,24 +74,29 @@ public class UsuarioDAO {
 
     }
     public void atualizarUsuario(String cpf, Map<String, Object> camposAtualizados){
-        if(camposAtualizados.isEmpty()){
+        if (camposAtualizados.isEmpty()) {
+            // Se não há campos para atualizar, saia sem executar a atualização
             return;
         }
 
-        StringBuilder sqlBuilder = new StringBuilder("UPDATE usuarios SET");
+        StringBuilder sqlBuilder = new StringBuilder("UPDATE usuarios SET ");
         MapSqlParameterSource params = new MapSqlParameterSource();
 
-        // Constriuir a parte de SET do SQL adicionando os parametros
-        camposAtualizados.forEach((campo,valor) -> {
+        // Construir a parte SET do SQL e adicionar parâmetros
+        camposAtualizados.forEach((campo, valor) -> {
             sqlBuilder.append(campo).append(" = :").append(campo).append(", ");
-            params.addValue(campo,valor);
+            params.addValue(campo, valor);
         });
 
-        //Removendo a ultima linha
+        // Adicionar o campo atualizadoEm com a data e hora atual
+        sqlBuilder.append("atualizadoEm = :atualizadoEm, ");
+        params.addValue("atualizadoEm", LocalDateTime.now());
+
+        // Remover a última vírgula
         sqlBuilder.delete(sqlBuilder.length() - 2, sqlBuilder.length());
 
-        //Adicionando o WHERE
-        sqlBuilder.append("WHERE cpf = :cpf");
+        // Adicionar a cláusula WHERE
+        sqlBuilder.append(" WHERE cpf = :cpf");
         params.addValue("cpf", cpf);
 
         String sql = sqlBuilder.toString();
@@ -114,10 +117,10 @@ public class UsuarioDAO {
         LocalDateTime agora = LocalDateTime.now();
         try {
             // Verifica se o usuário existe antes de deletar
-            Map<String, Object> usuario = jdbcTemplate.queryForMap("SELECT * FROM usuarios WHERE cpf = ? and active = true", cpf);
+            Map<String, Object> usuario = jdbcTemplate.queryForMap("SELECT * FROM usuarios WHERE cpf = ? and ativo = true", cpf);
 
             if (usuario != null && !usuario.isEmpty()) {
-                jdbcTemplate.update("UPDATE usuarios SET active = 0 AND atualizadoEm = ?  WHERE cpf = ?", cpf, agora);
+                jdbcTemplate.update("UPDATE usuarios SET ativo = 0 AND atualizadoEm = ?  WHERE cpf = ?", agora, cpf);
                 System.out.println("Usuário deletado com sucesso. CPF: " + cpf);
                 return true;
             } else {

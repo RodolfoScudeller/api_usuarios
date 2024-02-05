@@ -19,5 +19,4 @@ public class Usuario {
     private Boolean ativo;
     private LocalDateTime criadoEm;
     private LocalDateTime atualizadoEm;
-
 }
