@@ -21,13 +21,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringJUnitConfig
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestPropertySource(locations = "classpath:application-test.properties")
-//@Sql({"/mysql-initiation-test.sql"})
+@Sql({"/startup.sql"})
 public class UsuarioControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -91,6 +90,7 @@ public class UsuarioControllerIntegrationTest {
 
     @Test
     @Order(5)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testeDeletarUsuario() throws Exception {
         String cpf = "123";
 
@@ -100,4 +100,5 @@ public class UsuarioControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON)) // Verifica o tipo de conteúdo da resposta
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Usuário deletado com sucesso."));
     }
+
 }
