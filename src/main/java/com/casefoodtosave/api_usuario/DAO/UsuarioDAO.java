@@ -111,12 +111,13 @@ public class UsuarioDAO {
     }
 
     public boolean deletarUsuario(String cpf){
+        LocalDateTime agora = LocalDateTime.now();
         try {
             // Verifica se o usuário existe antes de deletar
             Map<String, Object> usuario = jdbcTemplate.queryForMap("SELECT * FROM usuarios WHERE cpf = ? and active = true", cpf);
 
             if (usuario != null && !usuario.isEmpty()) {
-                jdbcTemplate.update("UPDATE usuarios SET active = 0 WHERE cpf = ?", cpf);
+                jdbcTemplate.update("UPDATE usuarios SET active = 0 AND atualizadoEm = ?  WHERE cpf = ?", cpf, agora);
                 System.out.println("Usuário deletado com sucesso. CPF: " + cpf);
                 return true;
             } else {
