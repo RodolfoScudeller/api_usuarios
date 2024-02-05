@@ -153,18 +153,27 @@ A URL base para todas as solicitações é:
 #### Parâmetros de URL
 - `cpf` (string): O cpf do usuário.
 
-## Pré-requisitos
+[//]: # (## Pré-requisitos)
 
-Antes de iniciar, certifique-se de ter os seguintes itens instalados e configurados:
+[//]: # ()
+[//]: # (Antes de iniciar, certifique-se de ter os seguintes itens instalados e configurados:)
 
-- **Java:** [Link para download e instruções de instalação](https://www.oracle.com/java/technologies/javase-downloads.html)
-- **Maven:** [Link para download e instruções de instalação](https://maven.apache.org/download.cgi)
-- **Banco de Dados MySQL:**
-    - **Banco de Dados Normal (Produção):** Certifique-se de ter um banco de dados MySQL configurado para a produção. Você pode configurar as credenciais no arquivo `application.properties`.
-    - **Banco de Dados de Teste:** Configure um banco de dados MySQL separado para os testes. Certifique-se de ter um usuário e senha apropriados para este ambiente de teste.
+[//]: # ()
+[//]: # (- **Java:** [Link para download e instruções de instalação]&#40;https://www.oracle.com/java/technologies/javase-downloads.html&#41;)
 
-## Configuração do Banco de Dados
+[//]: # (- **Maven:** [Link para download e instruções de instalação]&#40;https://maven.apache.org/download.cgi&#41;)
 
-1. **Script de Criação de Tabelas:**
-    - Certifique-se de executar o script SQL `init.sql` localizado em `src/main/resources` para criar as tabelas necessárias no seu banco de dados.
+[//]: # (- **Banco de Dados MySQL:**)
+
+[//]: # (    - **Banco de Dados Normal &#40;Produção&#41;:** Certifique-se de ter um banco de dados MySQL configurado para a produção. Você pode configurar as credenciais no arquivo `application.properties`.)
+
+[//]: # (    - **Banco de Dados de Teste:** Configure um banco de dados MySQL separado para os testes. Certifique-se de ter um usuário e senha apropriados para este ambiente de teste.)
+
+[//]: # ()
+[//]: # (## Configuração do Banco de Dados)
+
+[//]: # ()
+[//]: # (1. **Script de Criação de Tabelas:**)
+
+[//]: # (    - Certifique-se de executar o script SQL `init.sql` localizado em `src/main/resources` para criar as tabelas necessárias no seu banco de dados.)
 
